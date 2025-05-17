@@ -1,0 +1,1 @@
+module.exports = { name: 'gameinfo', execute: (msg) => msg.reply('Game info...') };
