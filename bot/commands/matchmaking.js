@@ -4,6 +4,7 @@ module.exports = {
     .setName('matchmaking')
     .setDescription('🔍 Lance un matchmaking entre membres.'),
   async execute(interaction) {
-    await interaction.reply('⏳ Recherche d'un partenaire de jeu en cours...');
+    await interaction.reply(`⌛ Recherche d'un partenaire de jeu en cours...`);
+
   },
 };
