@@ -3,7 +3,6 @@ const path = require('path');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 require('dotenv').config();
 
-// Création du client Discord avec les intentions nécessaires
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -15,8 +14,8 @@ const client = new Client({
 
 client.commands = new Collection();
 
-// 🔁 Chargement dynamique des commandes depuis jarvisbot_commands/commands
-const commandsPath = path.join(__dirname, 'jarvisbot_commands', 'commands');
+// 🔁 Chargement dynamique des commandes
+const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
@@ -29,38 +28,11 @@ for (const file of commandFiles) {
   }
 }
 
-// ✅ Prêt
-client.once('ready', () => {
+client.once('ready', async () => {
   console.log(`✅ JarvisBot connecté en tant que ${client.user.tag}`);
-});
 
-// 📡 Gestion des commandes
-client.on('interactionCreate', async interaction => {
-  if (!interaction.isChatInputCommand()) return;
-
-  const command = client.commands.get(interaction.commandName);
-  if (!command) {
-    console.error(`Commande ${interaction.commandName} introuvable.`);
-    return;
-  }
-
-  try {
-    await command.execute(interaction);
-  } catch (error) {
-    console.error(`Erreur lors de l'exécution de ${interaction.commandName}:`, error);
-    await interaction.reply({ content: '❌ Une erreur est survenue.', ephemeral: true });
-  }
-});
-
-// 🔐 Connexion avec le token du .env
-client.login(process.env.TOKEN);
-client.on("ready", async () => {
-  console.log(`🤖 ${client.user.tag} prêt`);
-
+  // Enregistrement des slash commands
   const commands = [];
-
-  const commandFiles = fs.readdirSync(path.join(__dirname, "commands"))
-    .filter((file) => file.endsWith(".js"));
 
   for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
@@ -74,12 +46,30 @@ client.on("ready", async () => {
   }
 
   try {
-    await client.application.commands.set(commands);
-    console.log("✅ Commandes slash enregistrées !");
+    const guild = client.guilds.cache.get(process.env.GUILD_ID);
+    if (guild) {
+      await guild.commands.set(commands);
+      console.log("✅ Commandes slash enregistrées sur le serveur !");
+    } else {
+      console.log("❌ GUILD_ID introuvable ou bot non connecté au serveur.");
+    }
   } catch (error) {
-    console.error("❌ Erreur d'enregistrement :", error);
+    console.error("❌ Erreur d'enregistrement des commandes :", error);
   }
 });
-await client.guilds.cache.get("1338846065868144711").commands.set(commands);
 
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand()) return;
 
+  const command = client.commands.get(interaction.commandName);
+  if (!command) return;
+
+  try {
+    await command.execute(interaction);
+  } catch (error) {
+    console.error(`❌ Erreur sur la commande ${interaction.commandName}`, error);
+    await interaction.reply({ content: '❌ Une erreur est survenue.', ephemeral: true });
+  }
+});
+
+client.login(process.env.TOKEN);
