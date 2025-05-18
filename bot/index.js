@@ -54,4 +54,32 @@ client.on('interactionCreate', async interaction => {
 
 // 🔐 Connexion avec le token du .env
 client.login(process.env.TOKEN);
+client.on("ready", async () => {
+  console.log(`🤖 ${client.user.tag} prêt`);
+
+  const commands = [];
+
+  const commandFiles = fs.readdirSync(path.join(__dirname, "commands"))
+    .filter((file) => file.endsWith(".js"));
+
+  for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+    if (command.data) {
+      commands.push({
+        name: command.data.name,
+        description: command.data.description,
+        options: command.data.options || [],
+      });
+    }
+  }
+
+  try {
+    await client.application.commands.set(commands);
+    console.log("✅ Commandes slash enregistrées !");
+  } catch (error) {
+    console.error("❌ Erreur d'enregistrement :", error);
+  }
+});
+await client.guilds.cache.get("1338846065868144711").commands.set(commands);
+
 
