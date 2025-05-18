@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('stop')
-    .setDescription('Arrête la musique'),
+    .setName("stop")
+    .setDescription("Arrête la musique"),
   async execute(interaction) {
-    await interaction.reply('Commande `stop` exécutée !');
+    await interaction.reply("Commande `stop` exécutée !");
   }
 };

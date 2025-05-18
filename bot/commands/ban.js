@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('ban')
-    .setDescription('Bannir un utilisateur'),
+    .setName("ban")
+    .setDescription("Bannir un utilisateur"),
   async execute(interaction) {
-    await interaction.reply('Commande `ban` exécutée !');
+    await interaction.reply("Commande `ban` exécutée !");
   }
 };

@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('matchmaking')
-    .setDescription('Recherche un match/joueur'),
+    .setName("matchmaking")
+    .setDescription("Recherche un match/joueur"),
   async execute(interaction) {
-    await interaction.reply('Commande `matchmaking` exécutée !');
+    await interaction.reply("Commande `matchmaking` exécutée !");
   }
 };

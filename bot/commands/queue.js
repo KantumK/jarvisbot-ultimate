@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('queue')
-    .setDescription('Affiche la file de musique'),
+    .setName("queue")
+    .setDescription("Affiche la file de musique"),
   async execute(interaction) {
-    await interaction.reply('Commande `queue` exécutée !');
+    await interaction.reply("Commande `queue` exécutée !");
   }
 };
